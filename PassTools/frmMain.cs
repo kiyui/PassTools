@@ -24,19 +24,12 @@ namespace PassTools
             public string Details;
         }
         public List<PassWord> PassWordList = new List<PassWord>();
-        public List<string> PasswordAlgorithm = new List<string>();
-        public List<string> PasswordFunction_Random = new List<string>();
-        public List<string> PasswordFunction_Linear = new List<string>();
-        public List<string> PasswordFunction_Embed = new List<string>();
-        public List<string> PasswordFunction_SimpleHint = new List<string>();
-        public List<string> PasswordFunction_ComplexHint = new List<string>();
-        public List<string> PasswordDifficulty = new List<string>();
+        public List<string> includeValues = new List<string>();
         public string DBPath = Directory.GetCurrentDirectory() + "\\passDB";
         public string userPassWord;
         #endregion
         public frmMain()
         {
-            //PassListUpdate();
             InitializeComponent();
             unlockDB();
             updatePasswords();
@@ -76,39 +69,22 @@ namespace PassTools
         {
             GLtxtPass.Focus();
             GLtxtPass.SelectAll();
-        }
+        } 
         //Password generation
         private void PassListUpdate()
         {
-            //Algorithm List
-            PasswordAlgorithm.Add("Random");
-            PasswordAlgorithm.Add("Linear");
-            PasswordAlgorithm.Add("Embed");
-            PasswordAlgorithm.Add("Simple Hint");
-            PasswordAlgorithm.Add("Complex Hint");
-            //Random
-            PasswordFunction_Random.Add("Alphabetic");
-            PasswordFunction_Random.Add("Numeric");
-            PasswordFunction_Random.Add("AlphaNumeric");
-            //Linear
-            PasswordFunction_Linear.Add("Alphabetic");
-            PasswordFunction_Linear.Add("Numeric");
-            PasswordFunction_Linear.Add("AlphaNumeric");
-            //Embed
-            PasswordFunction_Embed.Add("Front");
-            PasswordFunction_Embed.Add("Back");
-            PasswordFunction_Embed.Add("Middle");
-            //Simple Hint
-            PasswordFunction_SimpleHint.Add("Split");
-            PasswordFunction_SimpleHint.Add("Block");
-            //Complex Hint
-            PasswordFunction_ComplexHint.Add("Trash");
-            PasswordFunction_ComplexHint.Add("Split");
-            PasswordFunction_ComplexHint.Add("Random");
-            //Difficulty
-            PasswordDifficulty.Add("Easy");
-            PasswordDifficulty.Add("Moderate");
-            PasswordDifficulty.Add("Hard");
+            cbAlgorithm.Items.Clear();
+            cbAlgorithm.Items.Add("Simple");
+            cbAlgorithm.Items.Add("Complex");
+            cbAlgorithm.SelectedIndex = 0;
+        } //Updates the password list
+        private string genSimple(string passwordSeed, double passwordLength)
+        {
+            return passwordSeed;
+        }
+        private string genComplex(string passwordSeed, double passwordLength)
+        {
+            return passwordSeed;
         }
         //Database
         private void unlockDB()
@@ -120,13 +96,12 @@ namespace PassTools
                 string welcomeMessage;
                 welcomeMessage = "Hi! It looks like you're new. Add an encryption password to begin using Pass Tools!";
                 MessageBox.Show(welcomeMessage, "Welcome to 'Pass Tools'!");
-                GLtxtPass.Focus();
             }
             else
             {
                 GL.Text = "Login";
             }
-        }
+        } //Decrypts the database
         private void readDB()
         {
             //Read the files
@@ -152,7 +127,7 @@ namespace PassTools
             //Delete the files
             System.IO.File.Delete(DBPath);
             System.IO.File.Delete(DBPath + ".tmp");
-        }
+        } //Reads the database
         private void writeDB()
         {
             XmlWriterSettings writer_settings = new XmlWriterSettings();
@@ -178,7 +153,7 @@ namespace PassTools
                 writer.Flush();
                 writer.Close();
             }
-        }
+        } //Writes out the database
         private void lockDB()
         {
             try
@@ -216,7 +191,8 @@ namespace PassTools
                 Console.WriteLine("This exception was caught: " + ex.ToString());
                 MessageBox.Show("An error occured while encrypting the database, please report the following error to the developer:" + System.Environment.NewLine + ex.ToString());
             }
-        }
+        } //Encrypts the database
+        //String testing
         public bool testString(string testString, int regextype)
         {
             Regex r0REGEX = new Regex("^[a-zA-Z0-9]*$");
@@ -244,21 +220,31 @@ namespace PassTools
                 return false;
             }
         } //Test if a string matches a certain REGEX type
+        public bool hasSpace(string testString)
+        {
+            for(int loopVar = 0; loopVar < testString.Length; loopVar++)
+            {
+                if (testString[loopVar] == ' ')
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         #endregion
 
         private void btnPass_Click(object sender, EventArgs e)
         {
             gGen.Visible = false;
             gPass.Visible = true;
-        }
+        }  //Switching to the password list
 
         private void btnGen_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("This section is not yet complete as per alpha release!", "Error");
-            return;
-            //gGen.Visible = true;
-            //gPass.Visible = false;
-        }
+            gGen.Visible = true;
+            gPass.Visible = false;
+            PassListUpdate();
+        } //Switching to the password generator
 
         private void passNSave_Click(object sender, EventArgs e)
         {
@@ -320,7 +306,7 @@ namespace PassTools
                 }
                 
             }
-        }
+        } //Switches to a selected password
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
@@ -347,7 +333,7 @@ namespace PassTools
                 lockDB();
                 System.IO.File.Delete(DBPath + ".tmp");
             }
-        }
+        } //When the form closes
 
         private void GLbtnGo_Click(object sender, EventArgs e)
         {
@@ -411,12 +397,116 @@ namespace PassTools
                 updatePasswords();
             }
             loginSuccess();
-        }
+        } //User login screen
 
         private void btnAbout_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Alpha 1 - Timur Lavrenti Kiyivinski 2014", "Pass Tools");
+            MessageBox.Show("Alpha 2 - Timur Lavrenti Kiyivinski 2014", "Pass Tools");
+        } //The about button
+
+        private void btnInclude_Click(object sender, EventArgs e)
+        {
+            if (hasSpace(txtGInclude.Text) == false)
+            {
+                cbInclude.Items.Add(txtGInclude.Text);
+                includeValues.Add(txtGInclude.Text);
+                cbInclude.SelectedIndex = cbInclude.Items.Count - 1; //Focuses the include combobox on the newest added value
+            }
+            else
+            {
+                MessageBox.Show("Cannot include: '" + txtGInclude.Text + "'.");
+                txtGInclude.Focus();
+                txtGInclude.SelectAll();
+            }
         }
+
+        private void btnUninclude_Click(object sender, EventArgs e)
+        {
+            if (cbInclude.SelectedIndex > -1)
+            {
+                includeValues.RemoveAt(cbInclude.SelectedIndex);
+                cbInclude.Items.RemoveAt(cbInclude.SelectedIndex);
+                if (cbInclude.Items.Count != 0)
+                {
+                    cbInclude.SelectedIndex = 0;
+                }
+            }
+        }
+
+        private void txtGLength_TextChanged(object sender, EventArgs e)
+        {
+            if (testString(txtGLength.Text, 2) == false)
+            {
+                lblGLComment.Text = "Length must be numeric!";
+            }
+            else if (txtGLength.Text == string.Empty)
+            {
+                lblGLComment.Text = "...";
+            }
+            else
+            {
+                double passwordLength = Convert.ToDouble(txtGLength.Text.ToString());
+                if (passwordLength == 0)
+                {
+                    lblGLComment.Text = "Password cannot be nothing";
+                }
+                else if (passwordLength < 8)
+                {
+                    lblGLComment.Text = "Short password (discouraged)";
+                }
+                else if (passwordLength < 12)
+                {
+                    lblGLComment.Text = "Average password";
+                }
+                else
+                {
+                    lblGLComment.Text = "Long password (recommended)";
+                }
+            }
+        }
+
+        private void btnGeneratePassword_Click(object sender, EventArgs e)
+        {
+            if (hasSpace(txtGPassSeed.Text) == true)
+            {
+                MessageBox.Show("Password seed cannot contain any whitespaces!");
+            }
+            else if (testString(txtGPassSeed.Text, 0) == false)
+            {
+                MessageBox.Show("Password seed must be alphanumeric!");
+            }
+            else if(txtGPassSeed.Text == string.Empty)
+            {
+                MessageBox.Show("Password seed cannot be empty!");
+            }
+            else
+            {
+                if (testString(txtGLength.Text, 2) == false)
+                {
+                    MessageBox.Show("Length must be numeric!");
+                    return;
+                }
+                else if (txtGLength.Text == string.Empty)
+                {
+                    MessageBox.Show("Length cannot be nothing!");
+                    return;
+                }
+                string generatedPassword;
+                switch (cbAlgorithm.SelectedIndex)
+                {
+                    case 0:
+                        generatedPassword = genSimple(txtGPassSeed.Text, Convert.ToDouble(txtGLength.Text.ToString()));
+                        break;
+                    case 1:
+                        generatedPassword = genComplex(txtGPassSeed.Text, Convert.ToDouble(txtGLength.Text.ToString()));
+                        break;
+                    default:
+                        Console.WriteLine("If you see this line, you should reconsider living.");
+                        break;
+                }
+                
+            }
+        } 
 
     }
 }
