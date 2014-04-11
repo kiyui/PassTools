@@ -71,6 +71,11 @@ namespace PassTools
             GLtxtPass.SelectAll();
         } 
         //Password generation
+        private string[] requestAlphabet()
+        {
+            string[] alphabet = new string[26] {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+            return alphabet;
+        }
         private void PassListUpdate()
         {
             cbAlgorithm.Items.Clear();
@@ -80,11 +85,98 @@ namespace PassTools
         } //Updates the password list
         private string genSimple(string passwordSeed, double passwordLength)
         {
-            return passwordSeed;
+            Random randomGen = new Random();
+            int sequenceSeed;
+            string returnPassword = string.Empty;
+            string[] alphabet = requestAlphabet();
+            while (returnPassword.Length != passwordLength)
+            {
+                if (passwordSeed.Length > passwordLength)
+                {
+                    sequenceSeed = randomGen.Next(Convert.ToInt32(passwordLength), passwordSeed.Length);
+                }
+                else
+                {
+                    sequenceSeed = randomGen.Next(passwordSeed.Length, Convert.ToInt32(passwordLength));
+                }
+                if (sequenceSeed > 25)
+                {
+                    sequenceSeed -= 25;
+                }
+                returnPassword += alphabet[sequenceSeed];
+            }
+            return returnPassword;
         }
         private string genComplex(string passwordSeed, double passwordLength)
         {
-            return passwordSeed;
+            Random randomGen = new Random();
+            int sequenceSeed;
+            string returnPassword = string.Empty;
+            string[] alphabet = requestAlphabet();
+            List<string> randomAlphabet = new List<string>();
+            List<int> addedIndex = new List<int>();
+            List<int> loopInt = new List<int>();
+            for (int loopVar = 0; loopVar < 26; loopVar++ )
+            {
+                sequenceSeed = randomGen.Next(0, 26);
+                if (addedIndex.IndexOf(sequenceSeed) == -1)
+                {
+                    randomAlphabet.Add(alphabet[sequenceSeed]);
+                    addedIndex.Add(sequenceSeed);
+                }
+                else
+                {
+                    loopVar--;
+                }
+            }
+            Console.WriteLine(addedIndex.Count.ToString());
+            for (int loopVar = 0; loopVar < passwordLength; loopVar++)
+            {
+                if (returnPassword.Length == passwordLength)
+                {
+                    break;
+                }
+                else
+                {
+                    loopInt.Add(Convert.ToInt32(loopVar % passwordSeed.Length));
+                }
+            }
+            for (int loopVar = 0; loopVar < passwordLength; loopVar++ )
+            {
+                int thisInt = randomAlphabet.IndexOf(passwordSeed[loopInt[loopVar]].ToString());
+                int nextInt; 
+                try
+                {
+                    nextInt = randomAlphabet.IndexOf(passwordSeed[loopInt[loopVar] + 1].ToString());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    nextInt = thisInt;
+                }
+                if (thisInt == -1 || nextInt == -1)
+                {
+                    loopVar--;
+                }
+                else
+                {
+                    int nextRand;
+                    if (thisInt <= nextInt)
+                    {
+                        nextRand = randomGen.Next(thisInt, nextInt + 1);
+                    }
+                    else
+                    {
+                        nextRand = randomGen.Next(nextInt, thisInt + 1);
+                    }
+                    returnPassword += randomAlphabet[nextRand];
+                }
+            }
+            return returnPassword;
+        }
+        private string addInclude(string generatedPassword, double passwordLength)
+        {
+            return generatedPassword;
         }
         //Database
         private void unlockDB()
@@ -467,6 +559,7 @@ namespace PassTools
 
         private void btnGeneratePassword_Click(object sender, EventArgs e)
         {
+            //Test password seed
             if (hasSpace(txtGPassSeed.Text) == true)
             {
                 MessageBox.Show("Password seed cannot contain any whitespaces!");
@@ -481,7 +574,12 @@ namespace PassTools
             }
             else
             {
-                if (testString(txtGLength.Text, 2) == false)
+                //Test password length
+                if (hasSpace(txtGLength.Text) == true)
+                {
+                    MessageBox.Show("Length cannot contain any whitespaces!");
+                }
+                else if (testString(txtGLength.Text, 2) == false)
                 {
                     MessageBox.Show("Length must be numeric!");
                     return;
@@ -491,7 +589,19 @@ namespace PassTools
                     MessageBox.Show("Length cannot be nothing!");
                     return;
                 }
-                string generatedPassword;
+                //Test length of include values
+                string includeLength = string.Empty;
+                foreach (string includeString in includeValues)
+                {
+                    includeLength += includeString;
+                }
+                if (includeLength.Length >= Convert.ToDouble(txtGLength.Text.ToString()))
+                {
+                    MessageBox.Show("Too many include values!");
+                    return;
+                }
+                //Generate the password
+                string generatedPassword = string.Empty;
                 switch (cbAlgorithm.SelectedIndex)
                 {
                     case 0:
@@ -504,7 +614,7 @@ namespace PassTools
                         Console.WriteLine("If you see this line, you should reconsider living.");
                         break;
                 }
-                
+                txtGOutputPassword.Text = generatedPassword;
             }
         } 
 
