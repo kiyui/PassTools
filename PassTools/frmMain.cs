@@ -83,6 +83,7 @@ namespace PassTools
             cbAlgorithm.Items.Add("Complex");
             cbAlgorithm.SelectedIndex = 0;
         } //Updates the password list
+        //Password generation types
         private string genSimple(string passwordSeed, double passwordLength)
         {
             Random randomGen = new Random();
@@ -174,10 +175,32 @@ namespace PassTools
             }
             return returnPassword;
         }
+        private int includeLength()
+        {
+            string includeChars = string.Empty;
+            foreach (string includeString in includeValues)
+            {
+                includeChars += includeString;
+            }
+            return Convert.ToInt32(includeChars.Length);
+        } //Calculates the include length
         private string addInclude(string generatedPassword, double passwordLength)
         {
-            return generatedPassword;
-        }
+            Random randomGen = new Random();
+            int placeIndex;
+            string includePassword = string.Empty;
+            string beforeStr;
+            string afterStr;
+            includePassword = generatedPassword.Substring(0, generatedPassword.Length - includeLength());
+            foreach(string charInclude in includeValues)
+            {
+                placeIndex = randomGen.Next(0, includePassword.Length);
+                beforeStr = includePassword.Substring(0, placeIndex);
+                afterStr = includePassword.Substring(placeIndex);
+                includePassword = beforeStr + charInclude + afterStr;
+            }
+            return includePassword;
+        } //Adds include values into the password
         //Database
         private void unlockDB()
         {
@@ -493,7 +516,7 @@ namespace PassTools
 
         private void btnAbout_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Alpha 3 - Timur Lavrenti Kiyivinski 2014", "Pass Tools");
+            MessageBox.Show("Beta 1 - Timur Lavrenti Kiyivinski 2014", "Pass Tools");
         } //The about button
 
         private void btnInclude_Click(object sender, EventArgs e)
@@ -510,7 +533,7 @@ namespace PassTools
                 txtGInclude.Focus();
                 txtGInclude.SelectAll();
             }
-        }
+        } //Include values
 
         private void btnUninclude_Click(object sender, EventArgs e)
         {
@@ -523,7 +546,7 @@ namespace PassTools
                     cbInclude.SelectedIndex = 0;
                 }
             }
-        }
+        } //Uninclude values
 
         private void txtGLength_TextChanged(object sender, EventArgs e)
         {
@@ -555,7 +578,7 @@ namespace PassTools
                     lblGLComment.Text = "Long password (recommended)";
                 }
             }
-        }
+        } //Updates comments based on desired password length
 
         private void btnGeneratePassword_Click(object sender, EventArgs e)
         {
@@ -591,12 +614,7 @@ namespace PassTools
                     return;
                 }
                 //Test length of include values
-                string includeLength = string.Empty;
-                foreach (string includeString in includeValues)
-                {
-                    includeLength += includeString;
-                }
-                if (includeLength.Length >= Convert.ToDouble(txtGLength.Text.ToString()))
+                if (includeLength() >= Convert.ToDouble(txtGLength.Text.ToString()))
                 {
                     MessageBox.Show("Too many include values!");
                     return;
@@ -606,20 +624,20 @@ namespace PassTools
                 switch (cbAlgorithm.SelectedIndex)
                 {
                     case 0:
-                        generatedPassword = genSimple(txtGPassSeed.Text, Convert.ToDouble(txtGLength.Text.ToString()));
+                        generatedPassword = genSimple(txtGPassSeed.Text.ToLower(), Convert.ToDouble(txtGLength.Text.ToString()));
                         break;
                     case 1:
-                        generatedPassword = genComplex(txtGPassSeed.Text, Convert.ToDouble(txtGLength.Text.ToString()));
+                        generatedPassword = genComplex(txtGPassSeed.Text.ToLower(), Convert.ToDouble(txtGLength.Text.ToString()));
                         break;
                     default:
                         Console.WriteLine("If you see this line, you should reconsider living.");
                         break;
                 }
                 //Add include values
-
+                generatedPassword = addInclude(generatedPassword, generatedPassword.Length);
                 txtGOutputPassword.Text = generatedPassword;
             }
-        } 
+        }  //Generates the password
 
     }
 }
