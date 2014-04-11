@@ -73,7 +73,17 @@ namespace PassTools
         //Password generation
         private string[] requestAlphabet()
         {
-            string[] alphabet = new string[26] {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+            string[] alphabet = new string[52];
+            string[] lowAlphabet = new string[26] {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+            for (int loopVar = 0; loopVar < 26; loopVar++ )
+            {
+                alphabet[loopVar] = lowAlphabet[loopVar];
+                alphabet[loopVar + 25] = lowAlphabet[loopVar].ToUpper();
+            }
+            foreach(string test in alphabet)
+            {
+                Console.WriteLine(test);
+            }
             return alphabet;
         }
         private void PassListUpdate()
@@ -100,9 +110,9 @@ namespace PassTools
                 {
                     sequenceSeed = randomGen.Next(passwordSeed.Length, Convert.ToInt32(passwordLength));
                 }
-                if (sequenceSeed > 25)
+                if (sequenceSeed > 51)
                 {
-                    sequenceSeed -= 25;
+                    sequenceSeed -= 51;
                 }
                 returnPassword += alphabet[sequenceSeed];
             }
@@ -117,9 +127,9 @@ namespace PassTools
             List<string> randomAlphabet = new List<string>();
             List<int> addedIndex = new List<int>();
             List<int> loopInt = new List<int>();
-            for (int loopVar = 0; loopVar < 26; loopVar++ )
+            for (int loopVar = 0; loopVar < 52; loopVar++ )
             {
-                sequenceSeed = randomGen.Next(0, 26);
+                sequenceSeed = randomGen.Next(0, 52);
                 if (addedIndex.IndexOf(sequenceSeed) == -1)
                 {
                     randomAlphabet.Add(alphabet[sequenceSeed]);
@@ -516,7 +526,7 @@ namespace PassTools
 
         private void btnAbout_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Beta 1 - Timur Lavrenti Kiyivinski 2014", "Pass Tools");
+            MessageBox.Show("Beta 2 - Timur Lavrenti Kiyivinski 2014", "Pass Tools");
         } //The about button
 
         private void btnInclude_Click(object sender, EventArgs e)
@@ -624,10 +634,10 @@ namespace PassTools
                 switch (cbAlgorithm.SelectedIndex)
                 {
                     case 0:
-                        generatedPassword = genSimple(txtGPassSeed.Text.ToLower(), Convert.ToDouble(txtGLength.Text.ToString()));
+                        generatedPassword = genSimple(txtGPassSeed.Text, Convert.ToDouble(txtGLength.Text.ToString()));
                         break;
                     case 1:
-                        generatedPassword = genComplex(txtGPassSeed.Text.ToLower(), Convert.ToDouble(txtGLength.Text.ToString()));
+                        generatedPassword = genComplex(txtGPassSeed.Text, Convert.ToDouble(txtGLength.Text.ToString()));
                         break;
                     default:
                         Console.WriteLine("If you see this line, you should reconsider living.");
