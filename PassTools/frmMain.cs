@@ -493,7 +493,7 @@ namespace PassTools
 
         private void btnAbout_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Alpha 2 - Timur Lavrenti Kiyivinski 2014", "Pass Tools");
+            MessageBox.Show("Alpha 3 - Timur Lavrenti Kiyivinski 2014", "Pass Tools");
         } //The about button
 
         private void btnInclude_Click(object sender, EventArgs e)
@@ -578,6 +578,7 @@ namespace PassTools
                 if (hasSpace(txtGLength.Text) == true)
                 {
                     MessageBox.Show("Length cannot contain any whitespaces!");
+                    return;
                 }
                 else if (testString(txtGLength.Text, 2) == false)
                 {
@@ -614,6 +615,8 @@ namespace PassTools
                         Console.WriteLine("If you see this line, you should reconsider living.");
                         break;
                 }
+                //Add include values
+
                 txtGOutputPassword.Text = generatedPassword;
             }
         } 
