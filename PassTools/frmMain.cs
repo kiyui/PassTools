@@ -1,9 +1,26 @@
-﻿using System;
+﻿    //Pass Tools, a simple password generator & manager.
+    //Copyright (C) 2014  Timur Lavrenti Kiyivinski
+
+    //This program is free software: you can redistribute it and/or modify
+    //it under the terms of the GNU General Public License as published by
+    //the Free Software Foundation, either version 3 of the License, or
+    //(at your option) any later version.
+
+    //This program is distributed in the hope that it will be useful,
+    //but WITHOUT ANY WARRANTY; without even the implied warranty of
+    //MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    //GNU General Public License for more details.
+
+    //You should have received a copy of the GNU General Public License
+    //along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -27,6 +44,10 @@ namespace PassTools
         public List<string> includeValues = new List<string>();
         public string DBPath = Directory.GetCurrentDirectory() + "\\passDB";
         public string userPassWord;
+        //To access about.txt
+        Assembly _assembly;
+        Stream _imageStream;
+        StreamReader _textStreamReader;
         #endregion
         public frmMain()
         {
@@ -286,7 +307,7 @@ namespace PassTools
                 using (RijndaelManaged aes = new RijndaelManaged())
                 {
                     byte[] key = ASCIIEncoding.UTF8.GetBytes(userPassWord);
-                    byte[] IV = ASCIIEncoding.UTF8.GetBytes("1234567890qwerty");
+                    byte[] IV = ASCIIEncoding.UTF8.GetBytes(userPassWord.Substring(0, 16));
                     //aes.Padding = PaddingMode.None;
                     using (FileStream fsCrypt = new FileStream(DBPath, FileMode.Create))
                     {
@@ -355,6 +376,22 @@ namespace PassTools
                 }
             }
             return false;
+        } //Tests if a string has a space
+        //Password
+        public string modifyPassword(string password)
+        {
+            if (password.Length < 32)
+            {
+                while (password.Length < 32)
+                {
+                    password += "N";
+                }
+            }
+            else if (password.Length > 32)
+            {
+                password = password.Substring(0, 32);
+            }
+            return password;
         }
         #endregion
 
@@ -457,20 +494,15 @@ namespace PassTools
                 writeDB();
                 lockDB();
                 System.IO.File.Delete(DBPath + ".tmp");
+                File.SetAttributes(DBPath, FileAttributes.Hidden);
             }
         } //When the form closes
 
         private void GLbtnGo_Click(object sender, EventArgs e)
         {
-            userPassWord = GLtxtPass.Text;
+            userPassWord = modifyPassword(GLtxtPass.Text);
             if (File.Exists(DBPath) == false)
             {
-                if(userPassWord.Length < 8)
-                {
-                    MessageBox.Show("Password must be at least 8 characters!");
-                    loginFail();
-                    return;
-                }
                 if(testString(userPassWord, 0) == false)
                 {
                     MessageBox.Show("Password must be alphanumeric!");
@@ -485,7 +517,7 @@ namespace PassTools
                     using (RijndaelManaged aes = new RijndaelManaged())
                     {
                         byte[] key = ASCIIEncoding.UTF8.GetBytes(userPassWord);
-                        byte[] IV = ASCIIEncoding.UTF8.GetBytes("1234567890qwerty");
+                        byte[] IV = ASCIIEncoding.UTF8.GetBytes(userPassWord.Substring(0, 16));
                         //aes.Padding = PaddingMode.None;
                         using (FileStream fsCrypt = new FileStream(DBPath, FileMode.Open, FileAccess.ReadWrite))
                         {
@@ -526,7 +558,37 @@ namespace PassTools
 
         private void btnAbout_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Beta 2 - Timur Lavrenti Kiyivinski 2014", "Pass Tools");
+            string aboutMessage = string.Empty;
+            try
+            {
+                _assembly = Assembly.GetExecutingAssembly();
+                _textStreamReader = new StreamReader(_assembly.GetManifestResourceStream("PassTools.about.txt"));
+                try
+                {
+                    while (true)
+                    {
+                        if (_textStreamReader.Peek() != -1)
+                        {
+                            aboutMessage += _textStreamReader.ReadLine();
+                            aboutMessage += Environment.NewLine;
+                        }
+                        else 
+                        {
+                            break;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("This exception was caught: {0}", ex.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("This exception was caught: {0}", ex.ToString());
+                aboutMessage = "Pass Tools, a simple password generator & manager, Copyright (C) 2014  Timur Lavrenti Kiyivinski. This program is distributed under the GNU GPL, available at: https://www.gnu.org/copyleft/gpl.html.";
+            }
+            MessageBox.Show(aboutMessage, "Pass Tools Version 0.1");
         } //The about button
 
         private void btnInclude_Click(object sender, EventArgs e)
@@ -585,7 +647,14 @@ namespace PassTools
                 }
                 else
                 {
-                    lblGLComment.Text = "Long password (recommended)";
+                    if (passwordLength == 69)
+                    {
+                        lblGLComment.Text = "Cheeky bastard ;)";
+                    }
+                    else
+                    {
+                        lblGLComment.Text = "Long password (recommended)";
+                    }
                 }
             }
         } //Updates comments based on desired password length
@@ -647,7 +716,33 @@ namespace PassTools
                 generatedPassword = addInclude(generatedPassword, generatedPassword.Length);
                 txtGOutputPassword.Text = generatedPassword;
             }
-        }  //Generates the password
+        } //Generates the password
+
+        private void btnTips_Click(object sender, EventArgs e)
+        {
+            List<string> tipsList = new List<string>();
+            tipsList.Add("Try making super long passwords. The longer they are, the harder to crack.");
+            tipsList.Add("Avoid using common words in passwords or things people would associate with you.");
+            tipsList.Add("An easy way to remember passwords is to only remember a random sequence like A&Kl_oP@. For every site you use, you could just do something like A&Kl_oP@mysite.");
+            tipsList.Add("Use a password manager to remember! Like this.");
+            tipsList.Add("Use different passwords for each site. Keep your hardest passwords for mission critical sites like your email or payment sites.");
+            tipsList.Add("Use two-step authentication on sites that offer it. In this case, you will receive an SMS with a code every time someone logs onto your account.");
+            Random randGen = new Random();
+            int someTip = randGen.Next(0, 5);
+            MessageBox.Show(tipsList[someTip]);
+        } //Gives password tips
+
+        private void btnCopy_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.Clipboard.SetText(txtGOutputPassword.Text);
+        } //Copies generated password to clipboard
+
+        private void txtEnter(object sender, EventArgs e)
+        {
+            TextBox senderTextBox = sender as TextBox;
+            senderTextBox.Focus();
+            senderTextBox.SelectAll();
+        }
 
     }
 }

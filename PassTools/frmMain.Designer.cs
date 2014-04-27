@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.btnPass = new System.Windows.Forms.Button();
             this.btnGen = new System.Windows.Forms.Button();
             this.gPass = new System.Windows.Forms.GroupBox();
@@ -54,6 +55,8 @@
             this.GLtxtPass = new System.Windows.Forms.TextBox();
             this.btnAbout = new System.Windows.Forms.Button();
             this.gGen = new System.Windows.Forms.GroupBox();
+            this.btnCopy = new System.Windows.Forms.Button();
+            this.btnTips = new System.Windows.Forms.Button();
             this.txtGOutputPassword = new System.Windows.Forms.TextBox();
             this.lblGPassword = new System.Windows.Forms.Label();
             this.lblGLComment = new System.Windows.Forms.Label();
@@ -145,6 +148,8 @@
             this.passNPass.Size = new System.Drawing.Size(126, 20);
             this.passNPass.TabIndex = 3;
             this.passNPass.Text = "...";
+            this.passNPass.Click += new System.EventHandler(this.txtEnter);
+            this.passNPass.Enter += new System.EventHandler(this.txtEnter);
             // 
             // passNName
             // 
@@ -153,6 +158,8 @@
             this.passNName.Size = new System.Drawing.Size(126, 20);
             this.passNName.TabIndex = 1;
             this.passNName.Text = "...";
+            this.passNName.Click += new System.EventHandler(this.txtEnter);
+            this.passNName.Enter += new System.EventHandler(this.txtEnter);
             // 
             // passNDetails
             // 
@@ -162,6 +169,8 @@
             this.passNDetails.Size = new System.Drawing.Size(185, 143);
             this.passNDetails.TabIndex = 5;
             this.passNDetails.Text = "...";
+            this.passNDetails.Click += new System.EventHandler(this.txtEnter);
+            this.passNDetails.Enter += new System.EventHandler(this.txtEnter);
             // 
             // lblNDetails
             // 
@@ -321,6 +330,7 @@
             this.GLtxtPass.PasswordChar = 'X';
             this.GLtxtPass.Size = new System.Drawing.Size(338, 20);
             this.GLtxtPass.TabIndex = 0;
+            this.GLtxtPass.Enter += new System.EventHandler(this.txtEnter);
             // 
             // btnAbout
             // 
@@ -335,6 +345,8 @@
             // 
             // gGen
             // 
+            this.gGen.Controls.Add(this.btnCopy);
+            this.gGen.Controls.Add(this.btnTips);
             this.gGen.Controls.Add(this.txtGOutputPassword);
             this.gGen.Controls.Add(this.lblGPassword);
             this.gGen.Controls.Add(this.lblGLComment);
@@ -358,12 +370,34 @@
             this.gGen.Text = "Generate a Password";
             this.gGen.Visible = false;
             // 
+            // btnCopy
+            // 
+            this.btnCopy.Location = new System.Drawing.Point(369, 180);
+            this.btnCopy.Name = "btnCopy";
+            this.btnCopy.Size = new System.Drawing.Size(45, 23);
+            this.btnCopy.TabIndex = 20;
+            this.btnCopy.Text = "Copy";
+            this.btnCopy.UseVisualStyleBackColor = true;
+            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
+            // 
+            // btnTips
+            // 
+            this.btnTips.Location = new System.Drawing.Point(369, 17);
+            this.btnTips.Name = "btnTips";
+            this.btnTips.Size = new System.Drawing.Size(45, 23);
+            this.btnTips.TabIndex = 19;
+            this.btnTips.Text = "?";
+            this.btnTips.UseVisualStyleBackColor = true;
+            this.btnTips.Click += new System.EventHandler(this.btnTips_Click);
+            // 
             // txtGOutputPassword
             // 
             this.txtGOutputPassword.Location = new System.Drawing.Point(113, 183);
             this.txtGOutputPassword.Name = "txtGOutputPassword";
             this.txtGOutputPassword.Size = new System.Drawing.Size(248, 20);
             this.txtGOutputPassword.TabIndex = 18;
+            this.txtGOutputPassword.Click += new System.EventHandler(this.txtEnter);
+            this.txtGOutputPassword.Enter += new System.EventHandler(this.txtEnter);
             // 
             // lblGPassword
             // 
@@ -399,7 +433,9 @@
             this.txtGLength.Name = "txtGLength";
             this.txtGLength.Size = new System.Drawing.Size(121, 20);
             this.txtGLength.TabIndex = 14;
+            this.txtGLength.Click += new System.EventHandler(this.txtEnter);
             this.txtGLength.TextChanged += new System.EventHandler(this.txtGLength_TextChanged);
+            this.txtGLength.Enter += new System.EventHandler(this.txtEnter);
             // 
             // lblGLength
             // 
@@ -445,6 +481,8 @@
             this.txtGInclude.Name = "txtGInclude";
             this.txtGInclude.Size = new System.Drawing.Size(121, 20);
             this.txtGInclude.TabIndex = 7;
+            this.txtGInclude.Click += new System.EventHandler(this.txtEnter);
+            this.txtGInclude.Enter += new System.EventHandler(this.txtEnter);
             // 
             // lblGInclude
             // 
@@ -461,6 +499,8 @@
             this.txtGPassSeed.Name = "txtGPassSeed";
             this.txtGPassSeed.Size = new System.Drawing.Size(248, 20);
             this.txtGPassSeed.TabIndex = 3;
+            this.txtGPassSeed.Click += new System.EventHandler(this.txtEnter);
+            this.txtGPassSeed.Enter += new System.EventHandler(this.txtEnter);
             // 
             // lblGSeed
             // 
@@ -501,6 +541,7 @@
             this.Controls.Add(this.gPass);
             this.Controls.Add(this.gGen);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Pass Tools";
@@ -561,6 +602,8 @@
         private System.Windows.Forms.TextBox GLtxtPass;
         private System.Windows.Forms.Button GLbtnGo;
         private System.Windows.Forms.Label GLlblPass;
+        private System.Windows.Forms.Button btnTips;
+        private System.Windows.Forms.Button btnCopy;
     }
 }
 
