@@ -744,5 +744,10 @@ namespace PassTools
             senderTextBox.SelectAll();
         }
 
+        private void btnCopyGen_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.Clipboard.SetText(passDPass.Text);
+        }
+
     }
 }

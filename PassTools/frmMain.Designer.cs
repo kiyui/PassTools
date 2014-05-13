@@ -72,6 +72,7 @@
             this.lblGSeed = new System.Windows.Forms.Label();
             this.cbAlgorithm = new System.Windows.Forms.ComboBox();
             this.lblGAlgorithm = new System.Windows.Forms.Label();
+            this.btnCopyGen = new System.Windows.Forms.Button();
             this.gPass.SuspendLayout();
             this.gPassNew.SuspendLayout();
             this.gPassDetails.SuspendLayout();
@@ -201,6 +202,7 @@
             // 
             // gPassDetails
             // 
+            this.gPassDetails.Controls.Add(this.btnCopyGen);
             this.gPassDetails.Controls.Add(this.passDDetails);
             this.gPassDetails.Controls.Add(this.lblDDetails);
             this.gPassDetails.Controls.Add(this.passDPass);
@@ -216,18 +218,18 @@
             // 
             // passDDetails
             // 
-            this.passDDetails.Location = new System.Drawing.Point(9, 79);
+            this.passDDetails.Location = new System.Drawing.Point(9, 108);
             this.passDDetails.Multiline = true;
             this.passDDetails.Name = "passDDetails";
             this.passDDetails.ReadOnly = true;
-            this.passDDetails.Size = new System.Drawing.Size(185, 172);
+            this.passDDetails.Size = new System.Drawing.Size(185, 143);
             this.passDDetails.TabIndex = 5;
             this.passDDetails.Text = "...";
             // 
             // lblDDetails
             // 
             this.lblDDetails.AutoSize = true;
-            this.lblDDetails.Location = new System.Drawing.Point(6, 63);
+            this.lblDDetails.Location = new System.Drawing.Point(6, 89);
             this.lblDDetails.Name = "lblDDetails";
             this.lblDDetails.Size = new System.Drawing.Size(42, 13);
             this.lblDDetails.TabIndex = 4;
@@ -529,6 +531,16 @@
             this.lblGAlgorithm.TabIndex = 0;
             this.lblGAlgorithm.Text = "Algorithm:";
             // 
+            // btnCopyGen
+            // 
+            this.btnCopyGen.Location = new System.Drawing.Point(9, 63);
+            this.btnCopyGen.Name = "btnCopyGen";
+            this.btnCopyGen.Size = new System.Drawing.Size(75, 23);
+            this.btnCopyGen.TabIndex = 6;
+            this.btnCopyGen.Text = "Copy";
+            this.btnCopyGen.UseVisualStyleBackColor = true;
+            this.btnCopyGen.Click += new System.EventHandler(this.btnCopyGen_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -604,6 +616,7 @@
         private System.Windows.Forms.Label GLlblPass;
         private System.Windows.Forms.Button btnTips;
         private System.Windows.Forms.Button btnCopy;
+        private System.Windows.Forms.Button btnCopyGen;
     }
 }
 
