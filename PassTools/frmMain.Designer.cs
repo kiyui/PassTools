@@ -41,6 +41,7 @@
             this.lblNPassword = new System.Windows.Forms.Label();
             this.lblNName = new System.Windows.Forms.Label();
             this.gPassDetails = new System.Windows.Forms.GroupBox();
+            this.btnCopyGen = new System.Windows.Forms.Button();
             this.passDDetails = new System.Windows.Forms.TextBox();
             this.lblDDetails = new System.Windows.Forms.Label();
             this.passDPass = new System.Windows.Forms.Label();
@@ -72,7 +73,6 @@
             this.lblGSeed = new System.Windows.Forms.Label();
             this.cbAlgorithm = new System.Windows.Forms.ComboBox();
             this.lblGAlgorithm = new System.Windows.Forms.Label();
-            this.btnCopyGen = new System.Windows.Forms.Button();
             this.gPass.SuspendLayout();
             this.gPassNew.SuspendLayout();
             this.gPassDetails.SuspendLayout();
@@ -216,6 +216,16 @@
             this.gPassDetails.TabStop = false;
             this.gPassDetails.Text = "Password Details";
             // 
+            // btnCopyGen
+            // 
+            this.btnCopyGen.Location = new System.Drawing.Point(9, 63);
+            this.btnCopyGen.Name = "btnCopyGen";
+            this.btnCopyGen.Size = new System.Drawing.Size(75, 23);
+            this.btnCopyGen.TabIndex = 6;
+            this.btnCopyGen.Text = "Copy";
+            this.btnCopyGen.UseVisualStyleBackColor = true;
+            this.btnCopyGen.Click += new System.EventHandler(this.btnCopyGen_Click);
+            // 
             // passDDetails
             // 
             this.passDDetails.Location = new System.Drawing.Point(9, 108);
@@ -243,6 +253,7 @@
             this.passDPass.Size = new System.Drawing.Size(16, 13);
             this.passDPass.TabIndex = 3;
             this.passDPass.Text = "...";
+            this.passDPass.UseMnemonic = false;
             // 
             // lblDPass
             // 
@@ -530,16 +541,6 @@
             this.lblGAlgorithm.Size = new System.Drawing.Size(53, 13);
             this.lblGAlgorithm.TabIndex = 0;
             this.lblGAlgorithm.Text = "Algorithm:";
-            // 
-            // btnCopyGen
-            // 
-            this.btnCopyGen.Location = new System.Drawing.Point(9, 63);
-            this.btnCopyGen.Name = "btnCopyGen";
-            this.btnCopyGen.Size = new System.Drawing.Size(75, 23);
-            this.btnCopyGen.TabIndex = 6;
-            this.btnCopyGen.Text = "Copy";
-            this.btnCopyGen.UseVisualStyleBackColor = true;
-            this.btnCopyGen.Click += new System.EventHandler(this.btnCopyGen_Click);
             // 
             // frmMain
             // 

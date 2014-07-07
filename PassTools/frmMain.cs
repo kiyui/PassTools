@@ -243,7 +243,7 @@ namespace PassTools
             {
                 GL.Text = "Login";
             }
-        } //Decrypts the database
+        } //Determine if there is any existing database.
         private void readDB()
         {
             //Read the files
@@ -267,7 +267,7 @@ namespace PassTools
                 Console.WriteLine("This exception was caught: " + ex.ToString());
             }
             //Delete the files
-            System.IO.File.Delete(DBPath);
+            //System.IO.File.Delete(DBPath);
             System.IO.File.Delete(DBPath + ".tmp");
         } //Reads the database
         private void writeDB()
@@ -298,6 +298,8 @@ namespace PassTools
         } //Writes out the database
         private void lockDB()
         {
+            //Delete previous database
+            System.IO.File.Delete(DBPath);
             try
             {
                 using (RijndaelManaged aes = new RijndaelManaged())
@@ -417,6 +419,7 @@ namespace PassTools
         }
         #endregion
 
+        #region "Event Handlers"
         private void btnPass_Click(object sender, EventArgs e)
         {
             gGen.Visible = false;
@@ -749,8 +752,9 @@ namespace PassTools
             tipsList.Add("Use a password manager to remember! Like this.");
             tipsList.Add("Use different passwords for each site. Keep your hardest passwords for mission critical sites like your email or payment sites.");
             tipsList.Add("Use two-step authentication on sites that offer it. In this case, you will receive an SMS with a code every time someone logs onto your account.");
+            tipsList.Add("Whenever possible, use other services to log into a site so you wouldn't have to create yet another password.");
             Random randGen = new Random();
-            int someTip = randGen.Next(0, 5);
+            int someTip = randGen.Next(0, 6);
             MessageBox.Show(tipsList[someTip]);
         } //Gives password tips
 
@@ -770,6 +774,6 @@ namespace PassTools
         {
             System.Windows.Forms.Clipboard.SetText(passDPass.Text);
         } //Copies generated password to clipboard
-
+        #endregion
     }
 }
