@@ -101,10 +101,6 @@ namespace PassTools
                 alphabet[loopVar] = lowAlphabet[loopVar];
                 alphabet[loopVar + 25] = lowAlphabet[loopVar].ToUpper();
             }
-            foreach(string test in alphabet)
-            {
-                Console.WriteLine(test);
-            }
             return alphabet;
         }
         private void PassListUpdate()
@@ -339,12 +335,34 @@ namespace PassTools
             }
         } //Encrypts the database
         //String testing
-        public bool testString(string testString, int regextype)
+        public bool testStringREGEX(string testString, int regextype)
         {
             Regex r0REGEX = new Regex("^[a-zA-Z0-9]*$");
             Regex r1REGEX = new Regex("^[a-zA-Z]*$");
             Regex r2REGEX = new Regex("^[0-9]*$");
             Regex testREGEX;
+            if (regextype == 3)
+            {
+                string[] testAlphabet = requestAlphabet();
+                List<char> allowCharList = new List<char>();
+                for (int loopVar = 0; loopVar < 51; loopVar++)
+                {
+                    allowCharList.Add(testAlphabet[loopVar][0]);
+                }
+                char[] symbols = new char[] {'!', '@', '#', '$', '%', '&', '*', '(', ')', '-', '_', '=', '+', ';', ':', ',', '.', '?' };
+                foreach (char testChar in symbols)
+                {
+                    allowCharList.Add(testChar);
+                }
+                foreach (char testChar in testString) 
+                {
+                    if (allowCharList.IndexOf(testChar) == -1)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
             if(regextype == 0)
             {
                 testREGEX = r0REGEX;
@@ -384,7 +402,7 @@ namespace PassTools
             {
                 while (password.Length < 32)
                 {
-                    password += "N";
+                    password += password[0];
                 }
             }
             else if (password.Length > 32)
@@ -411,7 +429,7 @@ namespace PassTools
         private void passNSave_Click(object sender, EventArgs e)
         {
             string newName = passNName.Text;
-            bool allowPassName = testString(newName, 0);
+            bool allowPassName = testStringREGEX(newName, 0);
             //Test if the password name already exists
             foreach (PassWord existingPassWord in PassWordList)
             {
@@ -503,9 +521,9 @@ namespace PassTools
             userPassWord = modifyPassword(GLtxtPass.Text);
             if (File.Exists(DBPath) == false)
             {
-                if(testString(userPassWord, 0) == false)
+                if(testStringREGEX(userPassWord, 3) == false)
                 {
-                    MessageBox.Show("Password must be alphanumeric!");
+                    MessageBox.Show("Password must be alphanumeric and may only contain these symbols: !@#$%^&*()_+-=,.?;:", "Invalid password!");
                     loginFail();
                     return;
                 }
@@ -622,7 +640,7 @@ namespace PassTools
 
         private void txtGLength_TextChanged(object sender, EventArgs e)
         {
-            if (testString(txtGLength.Text, 2) == false)
+            if (testStringREGEX(txtGLength.Text, 2) == false)
             {
                 lblGLComment.Text = "Length must be numeric!";
             }
@@ -666,7 +684,7 @@ namespace PassTools
             {
                 MessageBox.Show("Password seed cannot contain any whitespaces!");
             }
-            else if (testString(txtGPassSeed.Text, 0) == false)
+            else if (testStringREGEX(txtGPassSeed.Text, 0) == false)
             {
                 MessageBox.Show("Password seed must be alphanumeric!");
             }
@@ -682,7 +700,7 @@ namespace PassTools
                     MessageBox.Show("Length cannot contain any whitespaces!");
                     return;
                 }
-                else if (testString(txtGLength.Text, 2) == false)
+                else if (testStringREGEX(txtGLength.Text, 2) == false)
                 {
                     MessageBox.Show("Length must be numeric!");
                     return;
@@ -735,19 +753,19 @@ namespace PassTools
         private void btnCopy_Click(object sender, EventArgs e)
         {
             System.Windows.Forms.Clipboard.SetText(txtGOutputPassword.Text);
-        } //Copies generated password to clipboard
+        } //Copies password to clipboard
 
         private void txtEnter(object sender, EventArgs e)
         {
             TextBox senderTextBox = sender as TextBox;
             senderTextBox.Focus();
             senderTextBox.SelectAll();
-        }
+        } //Highlights text in selected textbox
 
         private void btnCopyGen_Click(object sender, EventArgs e)
         {
             System.Windows.Forms.Clipboard.SetText(passDPass.Text);
-        }
+        } //Copies generated password to clipboard
 
     }
 }
