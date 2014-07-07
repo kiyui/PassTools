@@ -348,6 +348,10 @@ namespace PassTools
                 for (int loopVar = 0; loopVar < 51; loopVar++)
                 {
                     allowCharList.Add(testAlphabet[loopVar][0]);
+                    if (loopVar < 10)
+                    {
+                        allowCharList.Add(loopVar.ToString()[0]);
+                    }
                 }
                 char[] symbols = new char[] {'!', '@', '#', '$', '%', '&', '*', '(', ')', '-', '_', '=', '+', ';', ':', ',', '.', '?' };
                 foreach (char testChar in symbols)
