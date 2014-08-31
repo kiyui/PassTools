@@ -42,11 +42,11 @@ namespace PassTools
         }
         public List<PassWord> PassWordList = new List<PassWord>();
         public List<string> includeValues = new List<string>();
-        public string DBPath = Directory.GetCurrentDirectory() + "\\passDB";
+		//public string DBPath = Directory.GetCurrentDirectory() + "\\passDB";
+		public string DBPath = Path.Combine(Directory.GetCurrentDirectory(), "passDB");
         public string userPassWord;
         //To access about.txt
         Assembly _assembly;
-        Stream _imageStream;
         StreamReader _textStreamReader;
         #endregion
         public frmMain()
